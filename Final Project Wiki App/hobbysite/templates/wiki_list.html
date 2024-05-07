@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Article List {% endblock %}
+{% block content %}
+  <body>
+    {% if request.user.is_authenticated %}
+        <h2>Your Articles</h2>
+        {% for article in object_list %}
+        <h4>
+            <li>
+              <a href="{{ article.get_absolute_url }}" >
+                {{ article.title }}
+              </a>
+            </li>
+
+        </h4>
+        {% empty %}
+          <p>There are no articles by you.</p>
+        {% endfor %}
+
+        <h2>All Articles</h2>
+          {% for article in all_articles %}
+            {% if article.author != request.user %}
+            <h4>
+               <li>
+                 <a href="{{ article.get_absolute_url }}">
+                     {{ article.title }}
+                 </a>
+               </li>
+            </h4>
+            {% endif %}
+          {% empty %}
+            <p> There are no articles available</p>
+          {% endfor %}
+
+
+    {% else %}
+        <h1> All Articles </h1>
+        {% for article in object_list %}
+          <h2>
+            <li>
+              <a href="{{ article.get_absolute_url }}">
+                {{ article.title }}
+              </a>
+            </li>
+
+          </h2>
+          {% empty %}
+          <p>There are no articles available.</p>
+        {% endfor %}
+      {% endif %}
+       <a href="{% url 'wiki:wiki-add' %}">Create Article</a>
+  </body>
+{% endblock %}

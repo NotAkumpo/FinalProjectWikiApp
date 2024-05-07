@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Article Detail{% endblock %}
+{% block content %}
+  <h1>{{ article.title }}</h1>
+  <p>{{ article.entry }}</p>
+    {% if article.header_image %}
+      <img src="{{ article.header_image.url }}" alt="{{ article.title }}">
+    {% endif %}
+    <h2>Other Articles by {{ article.author }} </h2>
+    {% for article in other_articles %}
+      <p>
+        <a href="{{ article.get_absolute_url }}">
+        {{ article.title }}
+        </a>
+      </p>
+    {% empty %}
+    <p>No other articles by {{ article.author }}</p>
+    {% endfor %}
+
+  <h2>Comments</h2>
+    {% for comment in all_comments %}
+        <p>{{ comment.entry }}</p>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Submit Comment</button>
+    </form>
+      <a href="{% url 'wiki:article-list' %}">Back to Article List</a>
+    {% if can_edit %}
+      <a href="{% url 'wiki:wiki-update' pk=article.pk %}">Edit Article</a>
+    {% endif %}
+{% endblock %}
